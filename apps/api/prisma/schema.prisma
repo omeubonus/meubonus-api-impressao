@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AgentStatus {
+  ONLINE
+  OFFLINE
+}
+
+enum PrintJobType {
+  TEXT
+  RAW
+  PDF
+  IMAGE
+  HTML
+}
+
+enum PrintJobStatus {
+  QUEUED
+  PRINTING
+  COMPLETED
+  FAILED
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+model Company {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  apiKey    String     @unique
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  agents    Agent[]
+  jobs      PrintJob[]
+
+  @@map("companies")
+}
+
+model Agent {
+  id             String      @id @default(uuid())
+  machineToken   String      @unique
+  code           String      @unique
+  name           String?
+  companyId      String?
+  company        Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  status         AgentStatus @default(OFFLINE)
+  lastSeenAt     DateTime?
+  hostname       String?
+  os             String?
+  version        String?
+  ipAddress      String?
+  defaultPrinter String?
+  printers       Json?       @default("[]")
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  jobs           PrintJob[]
+
+  @@index([companyId])
+  @@index([status])
+  @@map("agents")
+}
+
+model PrintJob {
+  id           String         @id @default(uuid())
+  companyId    String?
+  company      Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agentId      String
+  agent        Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  printerName  String?
+  title        String         @default("Print Job")
+  type         PrintJobType
+  content      String         @db.Text
+  options      Json?          @default("{}")
+  status       PrintJobStatus @default(QUEUED)
+  errorMessage String?
+  createdAt    DateTime       @default(now())
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  @@index([companyId])
+  @@index([agentId])
+  @@index([status])
+  @@map("print_jobs")
+}
+
+model SystemSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}

@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default tokens (Meu Bônus preset) */
+  --color-canvas-950: 14 14 16;
+  --color-canvas-900: 8 8 10;
+  --color-canvas-850: 18 18 21;
+  --color-surface-card: 23 23 26;
+  --color-surface-card-hover: 31 31 36;
+  --color-surface-subtle: 31 31 36;
+  --color-surface-border: 42 42 48;
+  --color-surface-border-subtle: 34 34 40;
+  --color-surface-muted: 156 154 149;
+  --color-accent-400: 255 209 102;
+  --color-accent-500: 255 184 0;
+  --color-accent-600: 255 184 0;
+  --color-accent-700: 201 138 0;
+  --color-on-accent: 26 18 0;
+}
+
+@layer base {
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: rgb(var(--color-canvas-900));
+    color: #f5f4f2;
+  }
+}
+
+/* Custom Scrollbar - clean, subtle and slim in neutral dark tones */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-surface-border) / 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-surface-muted) / 0.5);
+}

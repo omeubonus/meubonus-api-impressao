@@ -1,0 +1,47 @@
+appId: com.silentprint.desktop
+productName: SilentPrint Agent
+copyright: Copyright © 2026 SilentPrint
+asar: true
+removePackageScripts: true
+removePackageKeywords: true
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - package.json
+publish:
+  provider: github
+  owner: omeubonus
+  repo: meubonus-api-impressao
+  releaseType: release
+afterPack: ./scripts/after-pack.cjs
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.business
+  identity: "-"
+  hardenedRuntime: false
+  gatekeeperAssess: false
+win:
+  target:
+    - nsis
+    - msi
+    - portable
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SilentPrint Agent
+msi:
+  oneClick: false
+  perMachine: false
+  shortcutName: SilentPrint Agent
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Utility

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SilentPrint Hub — Proposta de Valor & Análise de Mercado</title>
+  <style>
+    :root {
+      --bg-primary: #090d16;
+      --bg-secondary: #111827;
+      --bg-card: #161f33;
+      --bg-card-hover: #1e2942;
+      --border-subtle: rgba(148, 163, 184, 0.16);
+      --border-highlight: rgba(56, 189, 248, 0.45);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-indigo: #6366f1;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scrollbar-gutter: stable;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 15% 0%, #172554 0%, var(--bg-primary) 45%);
+      color: var(--text-primary);
+      min-block-size: 100dvb;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 50;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(14px);
+      border-block-end: 1px solid var(--border-subtle);
+      padding-block: 0.75rem;
+      padding-inline: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: safe center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      display: inline-grid;
+      place-content: center;
+      inline-size: 2.1rem;
+      block-size: 2.1rem;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      color: #090d16;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      flex-wrap: balance;
+      gap: 0.35rem;
+      margin-inline: auto;
+    }
+
+    .nav-pill {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding-block: 0.4rem;
+      padding-inline: 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .nav-pill:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-pill.active {
+      color: #090d16;
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: safe center;
+      gap: 0.5rem;
+      margin-inline-start: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: safe center;
+      gap: 0.4rem;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      padding-block: 0.45rem;
+      padding-inline: 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-cyan);
+      background: var(--bg-card-hover);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      color: #090d16;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      color: #090d16;
+    }
+
+    /* Main Presentation Container */
+    main.deck {
+      inline-size: min(1280px, 94vw);
+      margin-inline: auto;
+      padding-block: 2rem 5rem;
+      flex: 1;
+    }
+
+    .slide {
+      display: none;
+      animation: fadeSlide 0.28s ease-out;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    body.scroll-mode .slide {
+      display: block;
+      margin-block-end: 3.5rem;
+      padding-block-end: 3rem;
+      border-block-end: 1px solid var(--border-subtle);
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Typography & Section Headers */
+    .slide-kicker {
+      display: inline-flex;
+      align-items: safe center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding-block: 0.28rem;
+      padding-inline: 0.75rem;
+      border-radius: 999px;
+      margin-block-end: 0.9rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3.6vw, 3.1rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-block-end: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-block-end: 0.65rem;
+    }
+
+    .lead {
+      font-size: clamp(1rem, 1.3vw, 1.18rem);
+      color: var(--text-secondary);
+      max-inline-size: 78ch;
+      margin-block-end: 1.75rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #38bdf8, #34d399, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Card Grids using CSS Subgrid for Ragged-Edge Alignment */
+    .card-grid {
+      inline-size: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-auto-rows: auto;
+      gap: 1.25rem;
+    }
+
+    .card-grid-4 {
+      inline-size: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-auto-rows: auto;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-card);
+      display: grid;
+      grid-Row: span 3;
+      grid-template-rows: auto 1fr auto;
+      grid-template-rows: subgrid;
+      gap: 0.75rem;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-highlight);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-body {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+
+    .card-footer {
+      padding-block-start: 0.75rem;
+      border-block-start: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      color: var(--accent-emerald);
+      font-weight: 600;
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    /* Badges & Tags */
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      flex-wrap: balance;
+      gap: 0.45rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: safe center;
+      padding-block: 0.22rem;
+      padding-inline: 0.6rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-cyan { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+    .badge-indigo { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+
+    /* Hero Quote Box */
+    .thesis-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(99, 102, 241, 0.08));
+      border: 1px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      margin-block-end: 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .thesis-text {
+      flex: 1 1 520px;
+      min-inline-size: 0;
+      font-size: 1.12rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .code-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #090d16;
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding-block: 0.6rem;
+      padding-inline: 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* KPI Stat Boxes */
+    .stat-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent-cyan);
+    }
+
+    /* Comparison Table */
+    .table-wrapper {
+      inline-size: 100%;
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      inline-size: 100%;
+      border-collapse: collapse;
+      text-align: start;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      padding-block: 0.95rem;
+      padding-inline: 1.1rem;
+      border-block-end: 1px solid var(--border-subtle);
+      vertical-align: top;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    tr.highlight-row {
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    tr.highlight-row td {
+      border-block-end-color: rgba(16, 185, 129, 0.25);
+    }
+
+    /* Interactive ROI Simulator */
+    .simulator-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-block-start: 1rem;
+    }
+
+    .sim-controls, .sim-results {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .control-group {
+      margin-block-end: 1.35rem;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-block-end: 0.5rem;
+    }
+
+    .control-value {
+      color: var(--accent-cyan);
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      inline-size: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .bar-row {
+      margin-block-end: 1rem;
+    }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      margin-block-end: 0.3rem;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      inline-size: 100%;
+      block-size: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      block-size: 100%;
+      border-radius: 999px;
+      transition: inline-size 0.3s ease;
+    }
+
+    .savings-callout {
+      margin-block-start: 1.25rem;
+      padding: 1.1rem;
+      border-radius: var(--radius-md);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    /* Architecture Flow Diagram */
+    .arch-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.75rem;
+      margin-block: 1.25rem 1.75rem;
+    }
+
+    .arch-node {
+      flex: 1 1 200px;
+      min-inline-size: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      position: relative;
+    }
+
+    .arch-node-highlight {
+      border-color: var(--accent-cyan);
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.12), var(--bg-card));
+    }
+
+    .arch-step {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-block-end: 0.3rem;
+    }
+
+    /* Bottom Footer Deck Controls */
+    .deck-footer {
+      position: fixed;
+      inset-block-end: 0;
+      inset-inline: 0;
+      background: rgba(9, 13, 22, 0.9);
+      backdrop-filter: blur(12px);
+      border-block-start: 1px solid var(--border-subtle);
+      padding-block: 0.65rem;
+      padding-inline: 1.5rem;
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      z-index: 40;
+    }
+
+    body.scroll-mode .deck-footer {
+      display: none;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      inline-size: 10px;
+      block-size: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      inline-size: 28px;
+      background: var(--accent-cyan);
+    }
+
+    ul.clean-list {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    ul.clean-list li {
+      position: relative;
+      padding-inline-start: 1.25rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    ul.clean-list li::before {
+      content: "▹";
+      position: absolute;
+      inset-inline-start: 0;
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        color: #0f172a;
+      }
+      .topbar, .deck-footer {
+        display: none !important;
+      }
+      .slide {
+        display: block !important;
+        page-break-after: always;
+        margin-block-end: 2rem;
+      }
+      .card, .table-wrapper, .sim-controls, .sim-results {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        box-shadow: none;
+        color: #0f172a;
+      }
+      .card-title, h1, h2, .thesis-text {
+        color: #0f172a;
+        -webkit-text-fill-color: initial;
+      }
+      .card-body, .lead, td {
+        color: #334155;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">SP</span>
+      <span>SilentPrint Hub <small style="color: var(--text-muted); font-weight: 500;">| Inteligência de Mercado & Proposta de Valor</small></span>
+    </div>
+
+    <nav class="nav-pills" id="slideNav" aria-label="Navegação de Slides">
+      <button class="nav-pill active" data-slide="0">1. Visão & Tese</button>
+      <button class="nav-pill" data-slide="1">2. Dores do Mercado</button>
+      <button class="nav-pill" data-slide="2">3. Concorrentes & Preços</button>
+      <button class="nav-pill" data-slide="3">4. Calculadora ROI</button>
+      <button class="nav-pill" data-slide="4">5. Nosso Hub Hoje</button>
+      <button class="nav-pill" data-slide="5">6. Roadmap de Evolução</button>
+      <button class="nav-pill" data-slide="6">7. Planos & Monetização</button>
+      <button class="nav-pill" data-slide="7">8. Pitch & Nichos</button>
+    </nav>
+
+    <div class="toolbar-actions">
+      <button class="btn" id="toggleModeBtn" title="Alternar entre Slides e Página Corrida">📜 Modo Documento</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Exportar PDF</button>
+    </div>
+  </header>
+
+  <main class="deck">
+
+    <!-- SLIDE 1: CAPA & TESE CENTRAL -->
+    <section class="slide active" data-index="0">
+      <span class="slide-kicker">🚀 Proposta de Valor Executiva • Cloud-to-Local Print Bridge</span>
+      <h1>A Ponte Definitiva entre <span class="gradient-text">SaaS na Nuvem e Impressoras Físicas</span></h1>
+      <p class="lead">
+        Sistemas PDV, ERPs, Cardápios Digitais e WMS migraram para a Web, mas os navegadores bloqueiam o acesso silencioso ao hardware local. O <strong>SilentPrint Hub</strong> transforma qualquer impressora térmica ou A4 em um endpoint REST de baixíssima latência, multi-tenant e à prova de quedas de internet.
+      </p>
+
+      <div class="thesis-box">
+        <div class="thesis-text">
+          <strong>Nossa Proposta Única de Valor (UVP):</strong><br />
+          "Enquanto o <em>QZ Tray</em> exige Java, certificados digitais e navegador aberto, e o <em>PrintNode</em> cobra em dólar por volume sem fila inteligente nem onboarding amigável, o <strong>SilentPrint Hub</strong> entrega pareamento em 10 segundos por código curto, fila offline nativa no PostgreSQL 18 e observabilidade total em tempo real."
+        </div>
+        <div class="code-pill">Código de Pareamento: IMP-9F4K2A</div>
+      </div>
+
+      <div class="card-grid-4">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Onboarding em 10s</span>
+            <span class="badge badge-emerald">Zero Login no PC</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">IMP-XXXXXX</div>
+            <p>O operador de caixa instala o Agente, copia o código de 6 dígitos e vincula no ERP via API (<code>/agents/claim</code>).</p>
+          </div>
+          <div class="card-footer">
+            <span>Estilo WhatsApp Web / Smart TV</span>
+            <span>✓ Pronto</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Zero Dependências</span>
+            <span class="badge badge-cyan">Nativo OS + TCP</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">0 Java / Zadig</div>
+            <p>Instalador standalone (<code>.exe</code> / <code>.dmg</code>) usando Spooler nativo do SO e socket direto TCP <code>:9100</code>.</p>
+          </div>
+          <div class="card-footer">
+            <span>Não quebra o driver original</span>
+            <span>✓ Pronto</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Resiliência Offline</span>
+            <span class="badge badge-indigo">PostgreSQL 18</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">100% Entrega</div>
+            <p>A internet do restaurante piscou? O Hub guarda na fila <code>QUEUED</code> e imprime no milissegundo em que reconectar.</p>
+          </div>
+          <div class="card-footer">
+            <span>Zero comandas perdidas</span>
+            <span>✓ Pronto</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Motor Multi-Formato</span>
+            <span class="badge badge-amber">5 Engines em 1</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">RAW a HTML</div>
+            <p>Imprime silenciosamente <code>TEXT</code>, <code>RAW</code> (ESC/POS com guilhotina), <code>PDF</code>, <code>IMAGE</code> e <code>HTML</code>.</p>
+          </div>
+          <div class="card-footer">
+            <span>Térmicas 58/80mm + Laser A4</span>
+            <span>✓ Pronto</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: AS 6 DORES REAIS DO MERCADO -->
+    <section class="slide" data-index="1">
+      <span class="slide-kicker">🔥 Diagnóstico de Mercado • Onde as Software Houses Sofrem</span>
+      <h2>As 6 Dores Críticas de Impressão em Sistemas Web/SaaS</h2>
+      <p class="lead">
+        Mais de 60% dos chamados de suporte técnico Nível 1 em ERPs de varejo e sistemas de Food Service no Brasil têm origem em falhas de impressão local.
+      </p>
+
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">1. O "Inferno do Suporte" (Java & Zadig)</span>
+            <span class="badge badge-rose">Dor Crítica</span>
+          </div>
+          <div class="card-body">
+            Soluções como QZ Tray exigem instalar e atualizar o <strong>Java (JRE)</strong> na máquina do caixa (gerando conflitos 32/64 bits). Bibliotecas USB brutas exigem o <strong>Zadig</strong>, que destrói o driver oficial do Windows.
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: Electron + Spooler Nativo</span>
+            <span>⚡ Zero Config</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">2. Pop-up do Navegador & Certificados Caros</span>
+            <span class="badge badge-rose">Atrito no Caixa</span>
+          </div>
+          <div class="card-body">
+            O <code>window.print()</code> abre diálogo manual que trava a fila do caixa em 8 segundos por venda. Já o QZ Tray gratuito exibe um pop-up bloqueante de segurança a cada cupom, cobrando <strong>US$ 749/ano</strong> pelo certificado.
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: 100% Silencioso via API</span>
+            <span>⚡ Sem Certificados</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">3. Bloqueios de CORS, HTTPS e Aba Fechada</span>
+            <span class="badge badge-amber">Falha Arquitetural</span>
+          </div>
+          <div class="card-body">
+            Agentes que rodam em <code>localhost</code> sofrem bloqueios de <em>Private Network Access (PNA)</em> do Chrome e <strong>não imprimem se a aba do navegador estiver fechada ou minimizada</strong> (fatal para pedidos automáticos do iFood).
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: Túnel Cloud-to-Local</span>
+            <span>⚡ Independe do Browser</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">4. Oscilação de Internet = Comanda Perdida</span>
+            <span class="badge badge-rose">Prejuízo Direto</span>
+          </div>
+          <div class="card-body">
+            Em restaurantes e depósitos, quedas de 20 segundos no Wi-Fi ou fibra são comuns. Sem uma fila persistente na nuvem, o disparo falha silenciosamente e o prato do cliente nunca é produzido na cozinha.
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: Fila Persistente PG18</span>
+            <span>⚡ Auto-Retry no Reconnect</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">5. Cegueira do Suporte (Dependência de AnyDesk)</span>
+            <span class="badge badge-amber">Custo Operacional</span>
+          </div>
+          <div class="card-body">
+            Quando o cliente reclama que "não imprimiu", a software house fica no escuro: não sabe se o PC está desligado, se o cabo USB soltou ou qual o nome exato da impressora no Windows, exigindo acesso via AnyDesk.
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: Heartbeat + Playground Web</span>
+            <span>⚡ Diagnóstico Remoto</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">6. Exposição de Credenciais no Cliente Final</span>
+            <span class="badge badge-indigo">Risco de Segurança</span>
+          </div>
+          <div class="card-body">
+            No PrintNode básico, o operador precisa digitar e-mail e senha da conta integradora no computador do caixa, ou o SaaS precisa gerenciar dezenas de subcontas e senhas manualmente.
+          </div>
+          <div class="card-footer">
+            <span>Solução SilentPrint: Claim/Unclaim por Código</span>
+            <span>⚡ Isolamento Multi-Tenant</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: BENCHMARK COMPETITIVO & VALORES REAIS -->
+    <section class="slide" data-index="2">
+      <span class="slide-kicker">📊 Benchmark Global • O Que Entregam e Quanto Cobram</span>
+      <h2>Análise Comparativa dos Players de Mercado</h2>
+      <p class="lead">
+        Levantamento real de preços, arquitetura e limitações das principais ferramentas globais utilizadas por desenvolvedores SaaS.
+      </p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Solução / Player</th>
+              <th>Arquitetura</th>
+              <th>Preços Oficiais Praticados</th>
+              <th>O Que Entrega Bem</th>
+              <th>Onde Deixa a Desejar (Nossa Oportunidade)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>PrintNode</strong><br />
+                <span class="badge badge-indigo">Reino Unido</span>
+              </td>
+              <td>Cloud REST API $\rightarrow$ Client Desktop (C++/Qt)</td>
+              <td>
+                • <strong>Individual:</strong> US$ 9 a US$ 99/mês<br />
+                • <strong>Integrator SaaS:</strong> <strong>US$ 60/mês</strong> (20 subcontas / 100k prints) a <strong>US$ 500/mês</strong> (200 subcontas / 500k prints)
+              </td>
+              <td>Baixa latência; API REST sólida; leitura de balanças USB/Serial.</td>
+              <td>
+                • Custo alto em dólar + IOF para SaaS no Brasil.<br />
+                • Sem pareamento por código curto (<code>IMP-XXXXXX</code>).<br />
+                • Não renderiza <code>HTML</code> nativamente.<br />
+                • Sem painel multi-tenant self-hosted acessível.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>QZ Tray</strong><br />
+                <span class="badge badge-amber">Estados Unidos</span>
+              </td>
+              <td>Browser JS (<code>localhost</code>) $\rightarrow$ Client em <strong>Java</strong></td>
+              <td>
+                • <strong>Free:</strong> US$ 0 (com pop-up bloqueante)<br />
+                • <strong>Premium:</strong> <strong>US$ 749 / ano</strong><br />
+                • <strong>White-Label:</strong> <strong>US$ 3.499 / ano</strong>
+              </td>
+              <td>Custo fixo anual para 1 domínio; forte em ZPL/ESC-POS direto do front-end.</td>
+              <td>
+                • <strong>Exige Java instalado</strong> no cliente.<br />
+                • <strong>Exige navegador aberto</strong> para imprimir.<br />
+                • Zero visão centralizada na nuvem (sem status online/offline dos caixas).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>JSPrintManager</strong><br />
+                <span class="badge badge-cyan">Neodynamic</span>
+              </td>
+              <td>Browser JS (<code>localhost</code>) $\rightarrow$ App Client Nativo</td>
+              <td>
+                • <strong>Web Server License:</strong> <strong>~US$ 499 / ano</strong> por domínio<br />
+                • <strong>Enterprise:</strong> US$ 1.500+
+              </td>
+              <td>Suporte a scanners TWAIN, portas seriais bidirecionais e ZPL.</td>
+              <td>
+                • Mesma limitação <code>Browser-to-Localhost</code>.<br />
+                • Sem fila em nuvem e sem dashboard administrativo para o suporte do SaaS.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>ezeep Blue</strong><br />
+                <span class="badge badge-rose">ThinPrint (Alemanha)</span>
+              </td>
+              <td>Cloud Rendering $\rightarrow$ Connector / Hub</td>
+              <td>
+                • <strong>Pro/Business:</strong> € 2,75 a € 5,95/usuário/mês (1.000 págs API inclusas)<br />
+                • <strong>Excedente API:</strong> <strong>US$ 0,01 por página</strong>
+              </td>
+              <td>Gestão corporativa de escritórios, SSO Entra ID, impressão A4.</td>
+              <td>
+                • Inviável para varejo/PDV de alto volume (100k cupons = US$ 1.000/mês de excedente).<br />
+                • Não é focado em ESC/POS térmico de balcão.
+              </td>
+            </tr>
+            <tr class="highlight-row">
+              <td>
+                <strong>SilentPrint Hub</strong><br />
+                <span class="badge badge-emerald">Nosso Ecossistema</span>
+              </td>
+              <td><strong>Cloud REST + Socket.IO Hub $\rightarrow$ Agente Electron (Spooler + TCP:9100)</strong></td>
+              <td>
+                • <strong>Moeda Local (R$)</strong> previsível por Agente Ativo ou Licença White-Label / Self-Hosted em Coolify
+              </td>
+              <td>
+                • <strong>Pareamento <code>IMP-XXXXXX</code></strong><br />
+                • <strong>Zero Java / Zero Zadig</strong><br />
+                • <strong>Fila Offline no Postgres 18</strong><br />
+                • <strong>Dashboard Live + Playground</strong>
+              </td>
+              <td>
+                • Pronto para receber camada de Webhooks, abertura de gaveta/buzzer e leitura de balança serial para dominar 100% do PDV.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: SIMULADOR INTERATIVO DE ROI -->
+    <section class="slide" data-index="3">
+      <span class="slide-kicker">🧮 Simulador Financeiro Interativo • Economia Real para Software Houses</span>
+      <h2>Calculadora de Custo Mensal: Concorrentes vs. SilentPrint Hub</h2>
+      <p class="lead">
+        Ajuste os controles abaixo para simular o cenário real de um ERP, PDV Web ou Plataforma de Delivery operando no Brasil (câmbio base: US$ 1 = R$ 5,70 c/ impostos).
+      </p>
+
+      <div class="simulator-layout">
+        <div class="sim-controls">
+          <div class="control-group">
+            <div class="control-label">
+              <span>Empresas / Lojas Clientes Conectadas</span>
+              <span class="control-value" id="lblStores">120 lojas</span>
+            </div>
+            <input type="range" id="rngStores" min="10" max="500" step="10" value="120" />
+            <small style="color: var(--text-muted);">Quantidade de estabelecimentos usando o Agente Desktop.</small>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Impressões por Loja / Dia (Cupons, Comandas, Etiquetas)</span>
+              <span class="control-value" id="lblPrintsPerDay">80 impressões/dia</span>
+            </div>
+            <input type="range" id="rngPrints" min="20" max="400" step="10" value="80" />
+            <small style="color: var(--text-muted);">Volume mensal total estimado: <strong id="lblTotalPrints" style="color: var(--text-primary);">288.000</strong> impressões/mês.</small>
+          </div>
+
+          <div class="control-group" style="margin-block-end: 0;">
+            <div class="control-label">
+              <span>Chamados de Suporte de Impressora Evitados / Mês</span>
+              <span class="control-value" id="lblTickets">35 chamados/mês</span>
+            </div>
+            <input type="range" id="rngTickets" min="5" max="150" step="5" value="35" />
+            <small style="color: var(--text-muted);">Considerando ~R$ 35 por atendimento remoto de 30 min via AnyDesk.</small>
+          </div>
+        </div>
+
+        <div class="sim-results">
+          <h3 style="margin-block-end: 1rem; font-size: 1.05rem;">Custo Mensal Total Estimado (Infra de Impressão + Suporte N1)</h3>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>PrintNode Integrator (em Dólar + Suporte Manual)</span>
+              <span id="costPrintNode" style="color: var(--accent-rose);">R$ 4.075 / mês</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="barPrintNode" style="inline-size: 75%; background: var(--accent-rose);"></div>
+            </div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>ezeep Blue API (US$ 0,01/pág excedente)</span>
+              <span id="costEzeep" style="color: var(--accent-amber);">R$ 16.416 / mês</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="barEzeep" style="inline-size: 100%; background: var(--accent-amber);"></div>
+            </div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>QZ Tray Premium + Custo de Suporte N1 (Java/AnyDesk)</span>
+              <span id="costQz" style="color: #a5b4fc;">R$ 1.580 / mês</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="barQz" style="inline-size: 38%; background: var(--accent-indigo);"></div>
+            </div>
+          </div>
+
+          <div class="bar-row" style="margin-block-end: 0;">
+            <div class="bar-header">
+              <span style="color: var(--accent-emerald);">★ SilentPrint Hub (Impressões Ilimitadas + Diagnóstico Web)</span>
+              <span id="costSilent" style="color: var(--accent-emerald); font-size: 1.05rem;">R$ 697 / mês</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="barSilent" style="inline-size: 16%; background: var(--accent-emerald);"></div>
+            </div>
+          </div>
+
+          <div class="savings-callout">
+            <div>
+              <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--accent-emerald);">Economia Anual Estimada vs. PrintNode</div>
+              <div style="font-size: 0.88rem; color: var(--text-secondary);">Redução direta de OPEX em dólar + horas de suporte N1</div>
+            </div>
+            <div class="stat-number" id="annualSavings" style="color: var(--accent-emerald); font-size: 1.75rem;">R$ 40.536/ano</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: COMO EXPLORAR AS FUNCIONALIDADES ATUAIS DO NOSSO HUB -->
+    <section class="slide" data-index="4">
+      <span class="slide-kicker">⚙️ O Que Já Temos Pronto • Alavancas Comerciais Imediatas</span>
+      <h2>Como Explorar as Funcionalidades Atuais do Nosso Hub</h2>
+      <p class="lead">
+        Nosso ecossistema já entrega 4 pilares prontos (`apps/api`, `apps/web`, `apps/desktop` e `apps/printer`) que resolvem a operação de ponta a ponta.
+      </p>
+
+      <div class="arch-flow">
+        <div class="arch-node">
+          <div class="arch-step">1. SaaS / ERP Cliente</div>
+          <strong>API REST Simples</strong>
+          <p style="font-size: 0.84rem; color: var(--text-secondary); margin-block-start: 0.35rem;">
+            Autentica via <code>x-api-key</code>, vincula o caixa com <code>POST /api/v1/agents/claim</code> e dispara <code>POST /api/v1/print</code>.
+          </p>
+        </div>
+        <div class="arch-node arch-node-highlight">
+          <div class="arch-step">2. SilentPrint Hub (Coolify)</div>
+          <strong>API + Painel Web + PG18</strong>
+          <p style="font-size: 0.84rem; color: var(--text-secondary); margin-block-start: 0.35rem;">
+            Valida com Zod, enfileira no PostgreSQL 18 se offline e roteia em tempo real via Socket.IO.
+          </p>
+        </div>
+        <div class="arch-node">
+          <div class="arch-step">3. Agente Desktop Local</div>
+          <strong>Electron + System Tray</strong>
+          <p style="font-size: 0.84rem; color: var(--text-secondary); margin-block-start: 0.35rem;">
+            Exibe código <code>IMP-XXXXXX</code>, descobre impressoras do SO + TCP <code>:9100</code> e envia heartbeats.
+          </p>
+        </div>
+        <div class="arch-node">
+          <div class="arch-step">4. Impressoras Físicas</div>
+          <strong>Térmicas & A4</strong>
+          <p style="font-size: 0.84rem; color: var(--text-secondary); margin-block-start: 0.35rem;">
+            Imprime silenciosamente via Spooler RAW (<code>winspool</code> / <code>lp</code>), Socket <code>:9100</code> ou Engine Gráfica.
+          </p>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Playground Remoto = Fim do AnyDesk</span>
+            <span class="badge badge-emerald">Diferencial Único</span>
+          </div>
+          <div class="card-body">
+            Pelo painel <code>apps/web</code>, o time de suporte da software house vê ao vivo quais impressoras estão conectadas no PC do cliente, altera a impressora padrão remotamente e dispara uma página de teste (ESC/POS, PDF ou HTML) sem precisar acessar a máquina do cliente.
+          </div>
+          <div class="card-footer">
+            <span>Reduz o TMA de suporte de 25 min para 30 seg</span>
+            <span>apps/web</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Segurança Anti-Sequestro (Claim/Unclaim)</span>
+            <span class="badge badge-cyan">Governança Multi-Tenant</span>
+          </div>
+          <div class="card-body">
+            Um Agente vinculado a uma empresa não pode ser capturado por outra sem desvínculo explícito. E quando desvinculado, o PostgreSQL rotaciona atomicamente o código <code>IMP-XXXXXX</code>, garantindo isolamento total entre clientes.
+          </div>
+          <div class="card-footer">
+            <span>Pronto para integração White-Label</span>
+            <span>apps/api</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Modo Híbrido: Spooler USB + TCP :9100</span>
+            <span class="badge badge-indigo">Cozinha & Caixa</span>
+          </div>
+          <div class="card-body">
+            Suporta tanto a impressora fiscal ligada no USB do caixa quanto as impressoras de produção (Bar, Cozinha, Pizzaiolo) ligadas via cabo de rede Ethernet direto na porta <code>9100</code>, com comando nativo de corte de papel (guilhotina).
+          </div>
+          <div class="card-footer">
+            <span>Inclui Emulador Térmico (apps/printer)</span>
+            <span>apps/desktop</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: ROADMAP DE EVOLUÇÃO (ONDE ATUAR AGORA) -->
+    <section class="slide" data-index="5">
+      <span class="slide-kicker">🗺️ Evolução de Produto • Criando um Fosso Competitivo Insuperável</span>
+      <h2>Roadmap Estratégico Baseado em Dores Reais</h2>
+      <p class="lead">
+        Com a fundação Cloud-to-Local pronta, estas 3 ondas de evolução transformam o SilentPrint Hub no padrão definitivo para Varejo, Food Service e Logística.
+      </p>
+
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Onda 1: Vitórias Rápidas de Balcão</span>
+            <span class="badge badge-emerald">Curto Prazo (Alta Demanda)</span>
+          </div>
+          <div class="card-body">
+            <ul class="clean-list">
+              <li><strong>Codepage Brasileiro Nativo (<code>CP850</code> / <code>CP860</code>):</strong> Conversão automática de acentos (<code>ç, ã, é</code>) no motor de texto/RAW para Elgin, Bematech e Epson.</li>
+              <li><strong>Abertura de Gaveta & Buzzer:</strong> Flags simples <code>"openDrawer": true</code> (pulso RJ11 <code>ESC p</code>) e <code>"buzzer": true</code> para apitar na cozinha.</li>
+              <li><strong>Webhooks Ativos:</strong> Notificar o SaaS quando um job falhar ou quando o Agente da loja ficar offline em horário de operação.</li>
+              <li><strong>Suporte Oficial a ZPL/EPL:</strong> Presets para etiquetas Zebra/Argox de Mercado Livre, Shopee e Correios.</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Destrava: E-commerce, WMS e PDV de Rua</span>
+            <span>Impacto Imediato</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Onda 2: Inteligência & Alta Disponibilidade</span>
+            <span class="badge badge-cyan">Médio Prazo (Retenção)</span>
+          </div>
+          <div class="card-body">
+            <ul class="clean-list">
+              <li><strong>Roteamento por Tags de Estação:</strong> Imprimir para <code>tag: "COZINHA"</code> ou <code>tag: "EXPEDICAO"</code> em vez de depender do nome físico do driver no Windows.</li>
+              <li><strong>Failover Automático de Impressora:</strong> Se a impressora TCP da Cozinha 1 falhar, redirecionar automaticamente o pedido para a Cozinha 2 ou Caixa com aviso no topo.</li>
+              <li><strong>Receipt Builder (JSON $\rightarrow$ ESC/POS):</strong> O SaaS envia apenas o JSON do pedido + chave PIX e o Hub compila o layout térmico 58mm/80mm com QR Code nativo.</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Destrava: Grandes Redes e Franquias</span>
+            <span>Diferencial Único</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Onda 3: Hub Completo de Hardware PDV</span>
+            <span class="badge badge-indigo">Expansão de Ticket Médio</span>
+          </div>
+          <div class="card-body">
+            <ul class="clean-list">
+              <li><strong>Leitura de Balanças (Serial RS-232 / USB):</strong> Ler peso em tempo real de balanças Toledo/Filizola/Urano pelo mesmo túnel WebSocket do Agente.</li>
+              <li><strong>Auto-Update Silencioso:</strong> Atualização transparente dos Agentes via GitHub Releases / S3.</li>
+              <li><strong>Portal White-Label:</strong> Geração automatizada de instaladores com o ícone e nome do ERP parceiro.</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Substitui 100% PrintNode e QZ Tray</span>
+            <span>Monetização Premium</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: MODELOS DE NEGÓCIO & PRECIFICAÇÃO -->
+    <section class="slide" data-index="6">
+      <span class="slide-kicker">💰 Go-To-Market & Monetização • Previsibilidade em Reais (R$)</span>
+      <h2>Estrutura de Planos Sugerida (B2B2B & Enterprise)</h2>
+      <p class="lead">
+        Cobrança alinhada ao modelo de negócio das Software Houses brasileiras: <strong>preço fixo por estação ativa (Agente) e impressões ilimitadas</strong>, sem sustos cambiais no fim do mês.
+      </p>
+
+      <div class="card-grid-4">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Starter SaaS</span>
+            <span class="badge badge-cyan">Para Micro-SaaS</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">R$ 197<small style="font-size: 0.9rem; color: var(--text-muted);">/mês</small></div>
+            <p style="margin-block: 0.5rem 0.75rem;">Ideal para sistemas em validação ou pequenas operações.</p>
+            <ul class="clean-list">
+              <li>Até <strong>25 Agentes ativos</strong></li>
+              <li>Impressões ilimitadas</li>
+              <li>Pareamento <code>IMP-XXXXXX</code></li>
+              <li>Fila Offline + Playground</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Custo por loja: R$ 7,88</span>
+            <span>Self-Service</span>
+          </div>
+        </article>
+
+        <article class="card" style="border-color: var(--accent-emerald);">
+          <div class="card-header">
+            <span class="card-title">Growth SaaS</span>
+            <span class="badge badge-emerald">Mais Vendido</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number" style="color: var(--accent-emerald);">R$ 497<small style="font-size: 0.9rem; color: var(--text-muted);">/mês</small></div>
+            <p style="margin-block: 0.5rem 0.75rem;">Para ERPs, PDVs Web e plataformas de Delivery em tração.</p>
+            <ul class="clean-list">
+              <li>Até <strong>100 Agentes ativos</strong></li>
+              <li>Impressões ilimitadas</li>
+              <li>Múltiplas <code>API_KEY</code>s por tenant</li>
+              <li>Webhooks em tempo real</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Custo por loja: R$ 4,97</span>
+            <span>Alta Margem</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Scale Partner</span>
+            <span class="badge badge-indigo">Alta Escala</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">R$ 1.497<small style="font-size: 0.9rem; color: var(--text-muted);">/mês</small></div>
+            <p style="margin-block: 0.5rem 0.75rem;">Para software houses consolidadas com centenas de lojas.</p>
+            <ul class="clean-list">
+              <li>Até <strong>500 Agentes ativos</strong></li>
+              <li>Impressões ilimitadas</li>
+              <li>Failover de impressoras</li>
+              <li>Suporte prioritário + SLA</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Custo por loja: R$ 2,99</span>
+            <span>B2B Partner</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">Enterprise / On-Prem</span>
+            <span class="badge badge-amber">White-Label</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-number">Custom</div>
+            <p style="margin-block: 0.5rem 0.75rem;">Deploy dedicado via Docker/Coolify na nuvem do cliente ou White-Label.</p>
+            <ul class="clean-list">
+              <li>Agentes <strong>Ilimitados</strong></li>
+              <li>Instalador <code>.exe</code>/<code>.dmg</code> com a marca do cliente</li>
+              <li>Domínio próprio dedicado</li>
+              <li>Soberania total do banco</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <span>Licença Anual / Dedicada</span>
+            <span>Zero Vendor Lock-in</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: NICHOS ALVO & PITCH EXECUTIVO -->
+    <section class="slide" data-index="7">
+      <span class="slide-kicker">🎯 Go-To-Market • Quem Compra e Como Abordar</span>
+      <h2>Verticais Prioritárias & Argumentos de Venda</h2>
+      <p class="lead">
+        Onde o SilentPrint Hub gera valor perceptível nos primeiros 15 minutos de demonstração técnica.
+      </p>
+
+      <div class="card-grid" style="margin-block-end: 1.5rem;">
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">🍕 Food Service & Cardápios Digitais</span>
+            <span class="badge badge-emerald">Prioridade #1</span>
+          </div>
+          <div class="card-body">
+            Sistemas de gestão de restaurantes, integração iFood e comanda eletrônica. Precisam que o pedido saia sozinho na térmica TCP <code>:9100</code> da cozinha e na USB do caixa mesmo com o navegador minimizado.
+          </div>
+          <div class="card-footer">
+            <span>Dor que mata: Pedido perdido em queda de Wi-Fi</span>
+            <span>Fit: 10/10</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">📦 E-commerce, WMS & Expedição</span>
+            <span class="badge badge-cyan">Prioridade #2</span>
+          </div>
+          <div class="card-body">
+            Sistemas ERP e integradores de marketplace (Mercado Livre, Shopee) que imprimem centenas de etiquetas 100x150mm (ZPL/PDF) e DANFE Simplificado por hora nas bancadas de empacotamento.
+          </div>
+          <div class="card-footer">
+            <span>Dor que mata: Abrir PDF por PDF no navegador</span>
+            <span>Fit: 9.5/10</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <span class="card-title">🏥 Clínicas, Laboratórios & Totens</span>
+            <span class="badge badge-indigo">Prioridade #3</span>
+          </div>
+          <div class="card-body">
+            Healthtechs e totens de autoatendimento (Kiosks) que emitem senhas térmicas na recepção, pulseiras de triagem de pacientes, etiquetas de amostras biológicas e receitas em impressoras A4.
+          </div>
+          <div class="card-footer">
+            <span>Dor que mata: Totem travado na janela Ctrl+P</span>
+            <span>Fit: 9.5/10</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="thesis-box" style="margin-block-end: 0;">
+        <div class="thesis-text">
+          <strong>🎯 Pitch para o CTO de um SaaS / ERP:</strong><br />
+          <em>"Quanto tempo seu time perde dando manutenção em scripts do QZ Tray, renovando certificado digital de US$ 749 ou fazendo acesso via AnyDesk porque o cliente desinstalou o Java? Com o SilentPrint Hub, seu backend dá um <code>POST /api/v1/print</code> e o resto — pareamento por código <code>IMP-XXXXXX</code>, fila offline no Postgres e painel de diagnóstico remoto — já está pronto."</em>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Slide Controls -->
+  <footer class="deck-footer">
+    <button class="btn" id="prevBtn">← Anterior</button>
+    <div class="progress-dots" id="progressDots" aria-label="Progresso da apresentação"></div>
+    <div style="display: flex; align-items: safe center; gap: 0.75rem;">
+      <span id="slideCounter" style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Slide 1 de 8</span>
+      <button class="btn btn-primary" id="nextBtn">Próximo →</button>
+    </div>
+  </footer>
+
+  <script>
+    // Slide Navigation Logic
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const navButtons = Array.from(document.querySelectorAll('.nav-pill'));
+    const dotsContainer = document.getElementById('progressDots');
+    const slideCounter = document.getElementById('slideCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const toggleModeBtn = document.getElementById('toggleModeBtn');
+
+    let currentSlide = 0;
+    let isScrollMode = false;
+
+    // Create dots
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (idx === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Ir para slide ' + (idx + 1));
+      dot.addEventListener('click', () => goToSlide(idx));
+      dotsContainer.appendChild(dot);
+    });
+    const dots = Array.from(dotsContainer.querySelectorAll('.dot'));
+
+    function goToSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentSlide = index;
+
+      if (isScrollMode) {
+        slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      navButtons.forEach((b, i) => b.classList.toggle('active', i === currentSlide));
+      dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+      slideCounter.textContent = `Slide ${currentSlide + 1} de ${slides.length}`;
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener('click', () => goToSlide(Number(btn.dataset.slide)));
+    });
+
+    prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (isScrollMode) return;
+      if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+      if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+    });
+
+    toggleModeBtn.addEventListener('click', () => {
+      isScrollMode = !isScrollMode;
+      document.body.classList.toggle('scroll-mode', isScrollMode);
+      toggleModeBtn.textContent = isScrollMode ? '🖥️ Modo Slides' : '📜 Modo Documento';
+      if (!isScrollMode) {
+        goToSlide(currentSlide);
+      }
+    });
+
+    // Interactive ROI Simulator Logic
+    const rngStores = document.getElementById('rngStores');
+    const rngPrints = document.getElementById('rngPrints');
+    const rngTickets = document.getElementById('rngTickets');
+
+    const lblStores = document.getElementById('lblStores');
+    const lblPrintsPerDay = document.getElementById('lblPrintsPerDay');
+    const lblTotalPrints = document.getElementById('lblTotalPrints');
+    const lblTickets = document.getElementById('lblTickets');
+
+    const costPrintNode = document.getElementById('costPrintNode');
+    const costEzeep = document.getElementById('costEzeep');
+    const costQz = document.getElementById('costQz');
+    const costSilent = document.getElementById('costSilent');
+    const annualSavings = document.getElementById('annualSavings');
+
+    const barPrintNode = document.getElementById('barPrintNode');
+    const barEzeep = document.getElementById('barEzeep');
+    const barQz = document.getElementById('barQz');
+    const barSilent = document.getElementById('barSilent');
+
+    const USD_TO_BRL = 5.70;
+    const SUPPORT_TICKET_COST = 35;
+
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+    }
+
+    function updateSimulator() {
+      const stores = Number(rngStores.value);
+      const printsPerDay = Number(rngPrints.value);
+      const tickets = Number(rngTickets.value);
+      const monthlyPrints = stores * printsPerDay * 30;
+
+      lblStores.textContent = `${stores} lojas`;
+      lblPrintsPerDay.textContent = `${printsPerDay} impressões/dia`;
+      lblTotalPrints.textContent = monthlyPrints.toLocaleString('pt-BR');
+      lblTickets.textContent = `${tickets} chamados/mês`;
+
+      const supportCost = tickets * SUPPORT_TICKET_COST;
+
+      // PrintNode Integrator calculation
+      let pnUsd = 60;
+      if (stores > 20 || monthlyPrints > 100000) {
+        pnUsd = 500;
+      }
+      if (stores > 200 || monthlyPrints > 500000) {
+        const extraBlocks = Math.ceil(Math.max(stores - 200, 0) / 100) + Math.ceil(Math.max(monthlyPrints - 500000, 0) / 250000);
+        pnUsd = 500 + extraBlocks * 200;
+      }
+      const totalPrintNodeBrl = Math.round(pnUsd * USD_TO_BRL + supportCost * 0.6);
+
+      // ezeep Blue API calculation ($0.01 per page over 1,000 + base €45)
+      const ezeepOverageUsd = Math.max(0, monthlyPrints - 1000) * 0.01 + 50;
+      const totalEzeepBrl = Math.round(ezeepOverageUsd * USD_TO_BRL);
+
+      // QZ Tray calculation ($749/yr = ~$62.5/mo + 100% of support tickets due to Java/Certs/Localhost)
+      const totalQzBrl = Math.round(62.5 * USD_TO_BRL + supportCost);
+
+      // SilentPrint Hub suggested tier
+      let silentBrl = 197;
+      if (stores > 25 && stores <= 100) silentBrl = 497;
+      else if (stores > 100 && stores <= 300) silentBrl = 997;
+      else if (stores > 300) silentBrl = 1497;
+
+      const maxVal = Math.max(totalPrintNodeBrl, Math.min(totalEzeepBrl, totalPrintNodeBrl * 1.6), totalQzBrl, silentBrl);
+
+      costPrintNode.textContent = `${formatBRL(totalPrintNodeBrl)} / mês`;
+      costEzeep.textContent = `${formatBRL(totalEzeepBrl)} / mês`;
+      costQz.textContent = `${formatBRL(totalQzBrl)} / mês`;
+      costSilent.textContent = `${formatBRL(silentBrl)} / mês`;
+
+      barPrintNode.style.inlineSize = `${Math.min(100, Math.max(8, (totalPrintNodeBrl / maxVal) * 100))}%`;
+      barEzeep.style.inlineSize = `${Math.min(100, Math.max(8, (totalEzeepBrl / maxVal) * 100))}%`;
+      barQz.style.inlineSize = `${Math.min(100, Math.max(8, (totalQzBrl / maxVal) * 100))}%`;
+      barSilent.style.inlineSize = `${Math.min(100, Math.max(6, (silentBrl / maxVal) * 100))}%`;
+
+      const yearlyDiff = Math.max(0, (totalPrintNodeBrl - silentBrl) * 12);
+      annualSavings.textContent = `${formatBRL(yearlyDiff)}/ano`;
+    }
+
+    [rngStores, rngPrints, rngTickets].forEach((input) => {
+      input.addEventListener('input', updateSimulator);
+    });
+
+    updateSimulator();
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+services:
+  api:
+    image: ${API_IMAGE:-ghcr.io/omeubonus/meubonus-api-impressao-api:latest}
+    restart: unless-stopped
+    expose:
+      - "3333"
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@silentprint.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3333/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.services.api.loadbalancer.server.port=3333"
+    networks:
+      - coolify
+      - silentprint-net
+
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/omeubonus/meubonus-api-impressao-web:latest}
+    restart: unless-stopped
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.services.web.loadbalancer.server.port=80"
+    networks:
+      - coolify
+      - silentprint-net
+
+networks:
+  coolify:
+    name: coolify
+    external: true
+  silentprint-net:
+    driver: bridge
