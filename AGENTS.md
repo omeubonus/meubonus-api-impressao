@@ -98,3 +98,21 @@ Antes de planejar ou implementar qualquer funcionalidade, consulte os artefatos 
    * Em produção (`!isDev`), manter DevTools, menu nativo, atalhos de inspeção, flags `--inspect`/`--remote-debugging-port` e logs `console.*`/`debugger` 100% desativados.
    * O `machineToken` deve permanecer criptografado via `safeStorage` (DPAPI/Keychain) e nunca ser enviado ao processo Renderer.
    * Chamadas de sistema no motor de impressão e auto-update devem usar exclusivamente `execFile` ou argumentos posicionais (zero interpolação em shell), sessões isoladas sem acesso externo e arquivos temporários com permissão `0o600`.
+7. **Release do Desktop Agent (`apps/desktop`):**
+   * O release é gerado pela tag `vX.Y.Z` (workflow `release-desktop.yml`). Antes de criar a tag, aumente `"version"` em `apps/desktop/package.json`.
+   * O domínio padrão da API fica embutido no instalador (`.env.production`, `vite.main.config.ts`, `vite.renderer.config.ts`, `src/main/store.ts`). Mudou o domínio, gere nova release.
+8. **`VITE_API_URL` do painel:** é embutido no build do `apps/web` pelo GitHub Actions (secret `VITE_API_URL`), não é variável de runtime do Coolify. Sem ele, o painel aponta para `http://localhost:3335` e o login falha. Alterou o secret, rode `deploy-web` e faça Redeploy do painel.
+
+---
+
+## 5. Ambiente de Produção (Coolify)
+
+Detalhes completos e troubleshooting em [`docs/deploy/coolify.md`](./docs/deploy/coolify.md). Resumo:
+
+* **Servidor:** uma VPS (`2.24.117.155`) gerenciada pelo Coolify em `https://coolify.meubonus.com.br`, projeto `meubonus`, ambiente `production`.
+* **API:** `https://api-impressao.meubonus.com.br` (recurso `impressaoDireta-api`, porta `3333`, healthcheck `/health`).
+* **Painel web:** `https://impressao.meubonus.com.br` (recurso `Web - Painel Print (Impressão Direta)`, porta `80`).
+* **Banco:** PostgreSQL 18 (`postgres-impressao-direta`, banco `silentprint_db`). Backup diário às 03:00 UTC, retenção local de 7 backups, 14 dias e 5 GB. Os backups ficam só na VPS, sem cópia externa.
+* **DNS:** zona de `meubonus.com.br` no Registro.br. Subdomínios novos exigem registro `A` para `2.24.117.155`.
+* **Deploy automático:** push na `main` em `apps/api/**` ou `apps/web/**` publica no GHCR e aciona o Coolify pelos secrets `COOLIFY_API_TOKEN`, `COOLIFY_API_WEBHOOK_URL`, `COOLIFY_WEB_WEBHOOK_URL`. O token do Coolify (`github-actions-deploy`) expira em 1 ano e precisa ser renovado.
+* **Segredos:** nunca registre senhas, `JWT_SECRET`, `DATABASE_URL` ou tokens em arquivos do repositório. Eles vivem apenas nas variáveis do Coolify e nos secrets do GitHub.
