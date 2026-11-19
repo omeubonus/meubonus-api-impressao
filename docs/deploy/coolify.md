@@ -47,9 +47,10 @@ flowchart LR
 
 ### 3.1 Recurso 1: `apps/api` (Backend & Socket.IO Hub)
 1. Clique em **+ New Resource** $\rightarrow$ **Docker Image**.
-2. **Image:** `ghcr.io/<seu-usuario>/<seu-repo>-api:latest`
+2. **Image:** `ghcr.io/omeubonus/meubonus-api-impressao-api:latest`
+   > Se o pacote GHCR for privado: Coolify → **Keys & Tokens** / servidor → faça `docker login ghcr.io` na VPS com um PAT `read:packages`, ou torne o pacote público.
 3. **Ports Exposes:** `3333`
-4. **Domains:** `https://api-impressao.seudominio.com`
+4. **Domains:** `https://api-impressao.meubonus.com.br`
 5. **Environment Variables:**
    | Variável | Exemplo / Valor | Descrição |
    | :--- | :--- | :--- |
@@ -59,7 +60,9 @@ flowchart LR
    | `JWT_SECRET` | *(string hexadecimal 64 chars)* | Segredo para tokens JWT do painel admin |
    | `ADMIN_EMAIL` | `admin@seudominio.com` | E-mail inicial do administrador |
    | `ADMIN_PASSWORD` | `SenhaForteAqui` | Senha inicial do administrador |
-   | `CORS_ORIGIN` | `https://impressao.seudominio.com` | URL pública do painel `apps/web` |
+   | `CORS_ORIGIN` | `https://impressao.meubonus.com.br` | URL pública do painel `apps/web` |
+   | `GITHUB_REPOSITORY` | `omeubonus/meubonus-api-impressao` | Repo das releases do Desktop Agent (rota `/api/downloads`) |
+   | `GITHUB_TOKEN` | *(PAT com `repo`/leitura de releases)* | Obrigatório se o repo for privado; evita rate limit da API do GitHub |
 6. **Healthcheck:**
    - **Path:** `/health`
    - **Port:** `3333`
@@ -67,9 +70,9 @@ flowchart LR
 
 ### 3.2 Recurso 2: `apps/web` (Painel Administrativo)
 1. Clique em **+ New Resource** $\rightarrow$ **Docker Image**.
-2. **Image:** `ghcr.io/<seu-usuario>/<seu-repo>-web:latest`
+2. **Image:** `ghcr.io/omeubonus/meubonus-api-impressao-web:latest`
 3. **Ports Exposes:** `80`
-4. **Domains:** `https://impressao.seudominio.com`
+4. **Domains:** `https://impressao.meubonus.com.br`
 
 ---
 
@@ -80,9 +83,9 @@ No repositório do GitHub, acesse **Settings $\rightarrow$ Secrets and variables
 | Secret | Descrição |
 | :--- | :--- |
 | `COOLIFY_API_TOKEN` | Token gerado no Coolify em *Keys & Tokens $\rightarrow$ API Tokens* |
-| `COOLIFY_API_WEBHOOK_URL` | Deploy Webhook URL do serviço `api` no Coolify (ex: `https://coolify.seudominio.com/api/v1/deploy?uuid=...&force=false`) |
+| `COOLIFY_API_WEBHOOK_URL` | Deploy Webhook URL do serviço `api` no Coolify (ex: `https://coolify.meubonus.com.br/api/v1/deploy?uuid=...&force=false`) |
 | `COOLIFY_WEB_WEBHOOK_URL` | Deploy Webhook URL do serviço `web` no Coolify |
-| `VITE_API_URL` | URL pública da API no Coolify (ex: `https://api-impressao.seudominio.com`) injetada no build do `apps/web` |
+| `VITE_API_URL` | URL pública da API no Coolify (ex: `https://api-impressao.meubonus.com.br`) injetada no build do `apps/web` |
 
 ---
 

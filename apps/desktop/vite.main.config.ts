@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env.APP_ENV': JSON.stringify(env.VITE_APP_ENV || mode),
       'process.env.HUB_URL': JSON.stringify(
-        env.VITE_HUB_URL || (mode === 'development' ? 'http://localhost:3335' : 'https://api.silentprint.fylee.com.br')
+        env.VITE_HUB_URL || (mode === 'development' ? 'http://localhost:3335' : 'https://api-impressao.meubonus.com.br')
       ),
       'process.env.APP_NAME': JSON.stringify(env.VITE_APP_NAME || 'SilentPrint Agent'),
       'process.env.APP_VERSION': JSON.stringify(pkg.version),

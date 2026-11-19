@@ -43,7 +43,7 @@ try {
   // Ignora se appData ainda não estiver disponível
 }
 
-export const DEFAULT_HUB_URL = process.env.HUB_URL || (isDev ? 'http://localhost:3335' : 'https://api.silentprint.fylee.com.br');
+export const DEFAULT_HUB_URL = process.env.HUB_URL || (isDev ? 'http://localhost:3335' : 'https://api-impressao.meubonus.com.br');
 
 const BLOCKED_TCP_PORTS = new Set([
   21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445,

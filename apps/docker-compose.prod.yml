@@ -12,6 +12,8 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@silentprint.local}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       CORS_ORIGIN: ${CORS_ORIGIN}
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-omeubonus/meubonus-api-impressao}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3333/health || exit 1"]
       interval: 15s

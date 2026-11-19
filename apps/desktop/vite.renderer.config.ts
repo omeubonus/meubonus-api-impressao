@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       '__APP_VERSION__': JSON.stringify(pkg.version),
       '__APP_ENV__': JSON.stringify(env.VITE_APP_ENV || mode),
       '__HUB_URL__': JSON.stringify(
-        env.VITE_HUB_URL || (mode === 'development' ? 'http://localhost:3335' : 'https://api.silentprint.fylee.com.br')
+        env.VITE_HUB_URL || (mode === 'development' ? 'http://localhost:3335' : 'https://api-impressao.meubonus.com.br')
       ),
     },
     esbuild: isProd
