@@ -249,7 +249,7 @@ export function Agents() {
   const [updatingAgentId, setUpdatingAgentId] = useState<string | null>(null);
 
   const handleTestPrint = (agent: Agent) => {
-    navigate(`/playground?agentId=${agent.id}`);
+    navigate(`/painel/playground?agentId=${agent.id}`);
   };
 
   const handleRequestUpdate = (agent: Agent) => {

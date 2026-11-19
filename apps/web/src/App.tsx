@@ -16,11 +16,12 @@ export function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Download />} />
           <Route path="/download" element={<Download />} />
+          <Route path="/login" element={<Login />} />
 
           <Route
-            path="/"
+            path="/painel"
             element={
               <ProtectedRoute>
                 <AppLayout />

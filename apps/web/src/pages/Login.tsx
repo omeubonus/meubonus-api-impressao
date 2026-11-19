@@ -20,7 +20,7 @@ export function Login() {
   const [submitting, setSubmitting] = useState(false);
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/painel" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export function Login() {
 
     try {
       await login({ email, password });
-      navigate('/');
+      navigate('/painel');
     } catch (err: any) {
       setError(err.message || 'Falha ao autenticar. Verifique suas credenciais.');
     } finally {

@@ -260,7 +260,7 @@ export function Playground() {
             <RefreshCw className="h-3.5 w-3.5" />
             Recarregar Agentes
           </Button>
-          <Link to="/jobs">
+          <Link to="/painel/jobs">
             <Button variant="outline" size="sm">
               Ver Histórico
             </Button>

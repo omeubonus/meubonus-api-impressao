@@ -19,32 +19,32 @@ interface SidebarProps {
 
 const navItems = [
   {
-    path: '/',
+    path: '/painel',
     label: 'Dashboard',
     icon: LayoutDashboard,
   },
   {
-    path: '/companies',
+    path: '/painel/companies',
     label: 'Empresas & API',
     icon: Building2,
   },
   {
-    path: '/agents',
+    path: '/painel/agents',
     label: 'Agentes de Impressão',
     icon: MonitorCheck,
   },
   {
-    path: '/playground',
+    path: '/painel/playground',
     label: 'Playground de Testes',
     icon: PlaySquare,
   },
   {
-    path: '/jobs',
+    path: '/painel/jobs',
     label: 'Histórico de Jobs',
     icon: ListOrdered,
   },
   {
-    path: '/branding',
+    path: '/painel/branding',
     label: 'Personalização',
     icon: Palette,
   },
@@ -93,7 +93,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   key={item.path}
                   to={item.path}
                   onClick={() => onClose()}
-                  end={item.path === '/'}
+                  end={item.path === '/painel'}
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition active:scale-95 select-none',

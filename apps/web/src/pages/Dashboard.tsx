@@ -94,7 +94,7 @@ export function Dashboard() {
             <RefreshCw className="h-3.5 w-3.5" />
             Atualizar
           </Button>
-          <Link to="/playground">
+          <Link to="/painel/playground">
             <Button size="sm" className="gap-1.5">
               <PlaySquare className="h-3.5 w-3.5" />
               Testar Impressão
@@ -205,7 +205,7 @@ export function Dashboard() {
                 Monitoramento em tempo real dos terminais instalados
               </CardDescription>
             </div>
-            <Link to="/agents">
+            <Link to="/painel/agents">
               <Button variant="ghost" size="sm" className="gap-1 text-accent-500 hover:text-accent-400">
                 Ver todos
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -315,7 +315,7 @@ export function Dashboard() {
               <CardTitle className="text-sm font-bold">Trabalhos Recentes</CardTitle>
               <CardDescription className="mt-0.5">Últimas impressões enviadas</CardDescription>
             </div>
-            <Link to="/jobs">
+            <Link to="/painel/jobs">
               <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-accent-500 hover:text-accent-400 gap-1">
                 Ver todos
                 <ArrowRight className="h-3 w-3" />
@@ -327,7 +327,7 @@ export function Dashboard() {
               <div className="flex flex-col items-center justify-center py-10 text-center rounded-xl border border-dashed border-surface-border bg-surface-subtle/30">
                 <Printer className="h-8 w-8 text-surface-muted mb-2 opacity-50" />
                 <p className="text-xs font-semibold text-white">Nenhum trabalho registrado</p>
-                <Link to="/playground" className="mt-2">
+                <Link to="/painel/playground" className="mt-2">
                   <Button size="sm" variant="outline" className="text-xs h-7">
                     Disparar teste
                   </Button>
