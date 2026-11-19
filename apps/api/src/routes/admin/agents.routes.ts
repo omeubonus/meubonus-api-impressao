@@ -6,6 +6,7 @@ import { validate } from '../../middlewares/validate';
 import { socketRegistry } from '../../websocket/socket-registry';
 import { generateUniqueAgentCode } from '../../utils/code-generator';
 import { AuthenticatedAdminRequest } from '../../types';
+import { failActiveJobsOnRebind, withAgentLock } from '../../services/agent-jobs';
 import { fetchLatestGitHubRelease } from '../downloads.routes';
 
 const router = Router();
@@ -111,11 +112,20 @@ router.post('/:id/assign', validate(assignAgentSchema), async (req: Authenticate
       return;
     }
 
-    const updated = await prisma.agent.update({
-      where: { id },
-      data: { companyId },
-      include: { company: { select: { id: true, name: true, slug: true } } },
+    const updated = await withAgentLock(id, async (tx) => {
+      const fresh = await tx.agent.findUnique({ where: { id } });
+      if (!fresh) return null;
+      if (fresh.companyId !== companyId) await failActiveJobsOnRebind(tx, id);
+      return tx.agent.update({
+        where: { id },
+        data: { companyId },
+        include: { company: { select: { id: true, name: true, slug: true } } },
+      });
     });
+    if (!updated) {
+      res.status(404).json({ error: 'Agente não encontrado' });
+      return;
+    }
 
     // Notifica o agente via WebSocket
     socketRegistry.emitToAgent(updated.id, 'agent:updated', {
@@ -149,13 +159,14 @@ router.post('/:id/unclaim', validate(unclaimAgentSchema), async (req: Authentica
 
     const newCode = await generateUniqueAgentCode(prisma);
 
-    const updated = await prisma.agent.update({
-      where: { id },
-      data: {
-        companyId: null,
-        code: newCode,
-      },
-      include: { company: { select: { id: true, name: true } } },
+    const updated = await withAgentLock(id, async (tx) => {
+      const fresh = await tx.agent.findUnique({ where: { id } });
+      if (fresh?.companyId) await failActiveJobsOnRebind(tx, id);
+      return tx.agent.update({
+        where: { id },
+        data: { companyId: null, code: newCode },
+        include: { company: { select: { id: true, name: true } } },
+      });
     });
 
     // Notifica o agente via WebSocket

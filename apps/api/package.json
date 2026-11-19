@@ -1,6 +1,6 @@
 {
   "name": "@silentprint/api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SilentPrint Hub Backend, WebSocket Server & REST API",
   "main": "dist/server.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "test": "tsx --test --test-concurrency=1 test/*.test.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

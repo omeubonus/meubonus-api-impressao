@@ -5,6 +5,7 @@ import { authApiKey } from '../../middlewares/auth';
 import { validate } from '../../middlewares/validate';
 import { socketRegistry } from '../../websocket/socket-registry';
 import { AuthenticatedCompanyRequest } from '../../types';
+import { createJobForAgent } from '../../services/agent-jobs';
 
 const router = Router();
 router.use(authApiKey);
@@ -43,27 +44,18 @@ router.post('/', validate(printRequestSchema), async (req: AuthenticatedCompanyR
       safeContent = Buffer.from(safeContent, 'binary').toString('base64');
     }
 
-    const job = await prisma.printJob.create({
-      data: {
-        companyId: company.id,
-        agentId: agent.id,
-        printerName: resolvedPrinter,
-        type,
-        content: safeContent,
-        title,
-        options,
-        status: 'QUEUED',
-      },
+    // Criação + despacho atômicos em relação a claim/unclaim (empresa revalidada sob lock)
+    const created = await createJobForAgent(agent.id, {
+      expectedCompanyId: company.id,
+      dispatch: true,
+      data: () => ({ printerName: resolvedPrinter, type, content: safeContent, title, options }),
     });
 
-    const isDispatched = socketRegistry.emitToAgent(agent.id, 'print:job', {
-      jobId: job.id,
-      title: job.title,
-      printerName: job.printerName,
-      type: job.type,
-      content: job.content,
-      options: job.options,
-    });
+    if (!created) {
+      res.status(404).json({ error: 'Agente não encontrado ou não vinculado a esta empresa' });
+      return;
+    }
+    const { job, dispatched: isDispatched } = created;
 
     socketRegistry.broadcastToAdmins('dashboard:update', {
       type: 'new_print_job',

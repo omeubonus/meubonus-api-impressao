@@ -6,6 +6,7 @@ import { validate } from '../../middlewares/validate';
 import { socketRegistry } from '../../websocket/socket-registry';
 import { generateUniqueAgentCode } from '../../utils/code-generator';
 import { AuthenticatedCompanyRequest } from '../../types';
+import { failActiveJobsOnRebind, withAgentLock } from '../../services/agent-jobs';
 
 const router = Router();
 router.use(authApiKey);
@@ -53,21 +54,28 @@ router.post('/claim', validate(claimSchema), async (req: AuthenticatedCompanyReq
       return;
     }
 
-    // Regra de segurança estrita de vínculo
-    if (agent.companyId && agent.companyId !== company.id) {
+    // Regra de segurança estrita de vínculo (revalidada sob lock: corrida com outro claim/unclaim)
+    const updated = await withAgentLock(agent.id, async (tx) => {
+      const fresh = await tx.agent.findUnique({ where: { id: agent.id } });
+      if (!fresh || fresh.code !== code) return 'missing' as const;
+      if (fresh.companyId && fresh.companyId !== company.id) return 'conflict' as const;
+      if (fresh.companyId !== company.id) await failActiveJobsOnRebind(tx, fresh.id);
+      return tx.agent.update({
+        where: { id: fresh.id },
+        data: { companyId: company.id, name: name || fresh.name },
+      });
+    });
+
+    if (updated === 'missing') {
+      res.status(404).json({ error: 'Nenhum agente encontrado com o código fornecido' });
+      return;
+    }
+    if (updated === 'conflict') {
       res.status(409).json({
         error: 'Conflito: este agente já está vinculado a outra empresa. Solicite a desvinculação prévia.',
       });
       return;
     }
-
-    const updated = await prisma.agent.update({
-      where: { id: agent.id },
-      data: {
-        companyId: company.id,
-        name: name || agent.name,
-      },
-    });
 
     // Notifica o agente conectado via Socket.IO
     socketRegistry.emitToAgent(updated.id, 'agent:updated', {
@@ -109,13 +117,17 @@ router.post('/:code/unclaim', validate(unclaimSchema), async (req: Authenticated
 
     const newCode = await generateUniqueAgentCode(prisma);
 
-    const updated = await prisma.agent.update({
-      where: { id: agent.id },
-      data: {
-        companyId: null,
-        code: newCode,
-      },
+    const updated = await withAgentLock(agent.id, async (tx) => {
+      const fresh = await tx.agent.findUnique({ where: { id: agent.id } });
+      if (!fresh || fresh.companyId !== company.id) return null;
+      await failActiveJobsOnRebind(tx, fresh.id);
+      return tx.agent.update({ where: { id: fresh.id }, data: { companyId: null, code: newCode } });
     });
+
+    if (!updated) {
+      res.status(404).json({ error: 'Agente não encontrado ou não pertence a esta empresa' });
+      return;
+    }
 
     socketRegistry.emitToAgent(updated.id, 'agent:updated', {
       code: updated.code,

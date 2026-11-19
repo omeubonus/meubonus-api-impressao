@@ -6,6 +6,13 @@ import { prisma } from '../config/prisma';
 import { env } from '../config/env';
 import { socketRegistry } from './socket-registry';
 import { generateUniqueAgentCode } from '../utils/code-generator';
+import {
+  applyPrintStatus,
+  createJobForAgent,
+  dispatchQueuedJobs,
+  failActiveJobsOnRebind,
+  withAgentLock,
+} from '../services/agent-jobs';
 
 const registerPayloadSchema = z.object({
   machineToken: z.string().min(1, 'machineToken é obrigatório'),
@@ -156,26 +163,9 @@ export function setupSocketServer(httpServer: HttpServer): Server {
         });
 
         // 3. Fila de Resiliência: Despachar jobs pendentes (QUEUED) para este agente
-        const pendingJobs = await prisma.printJob.findMany({
-          where: {
-            agentId: agent.id,
-            status: 'QUEUED',
-          },
-          orderBy: { createdAt: 'asc' },
-        });
-
-        if (pendingJobs.length > 0) {
-          console.log(`📦 Despachando ${pendingJobs.length} jobs pendentes para o agente ${agent.code}...`);
-          for (const job of pendingJobs) {
-            socket.emit('print:job', {
-              jobId: job.id,
-              title: job.title,
-              printerName: job.printerName,
-              type: job.type,
-              content: job.content,
-              options: job.options,
-            });
-          }
+        const dispatchedCount = await dispatchQueuedJobs(agent.id, socket);
+        if (dispatchedCount > 0) {
+          console.log(`📦 Despachando ${dispatchedCount} jobs pendentes para o agente ${agent.code}...`);
         }
       } catch (err: any) {
         console.error('Erro no processamento de agent:register:', err);
@@ -319,12 +309,10 @@ export function setupSocketServer(httpServer: HttpServer): Server {
         }
 
         const newCode = await generateUniqueAgentCode(prisma);
-        const updated = await prisma.agent.update({
-          where: { id: agent.id },
-          data: {
-            companyId: null,
-            code: newCode,
-          },
+        const updated = await withAgentLock(agent.id, async (tx) => {
+          const fresh = await tx.agent.findUnique({ where: { id: agent.id } });
+          if (fresh?.companyId) await failActiveJobsOnRebind(tx, agent.id);
+          return tx.agent.update({ where: { id: agent.id }, data: { companyId: null, code: newCode } });
         });
 
         const updatePayload = {
@@ -357,38 +345,15 @@ export function setupSocketServer(httpServer: HttpServer): Server {
       try {
         const payload = printStatusSchema.parse(rawData);
 
-        const job = await prisma.printJob.findUnique({
-          where: { id: payload.jobId },
-        });
-
-        if (!job) {
+        // Só o socket ATIVO do agente dono do job (empresa vigente) pode alterar o status.
+        const result = await applyPrintStatus(socket.id, payload);
+        if (!result.ok) {
           if (typeof ackCallback === 'function') {
-            ackCallback({ success: false, error: 'Job não encontrado' });
+            ackCallback({ success: false, error: result.error });
           }
           return;
         }
-
-        // REGRA DE OURO (Fonte da Verdade): Se o job já atingiu um estado terminal (COMPLETED ou FAILED),
-        // ignora qualquer status PRINTING atrasado recebido por concorrência de rede.
-        if ((job.status === 'COMPLETED' || job.status === 'FAILED') && payload.status === 'PRINTING') {
-          if (typeof ackCallback === 'function') {
-            ackCallback({ success: true, status: job.status });
-          }
-          return;
-        }
-
-        const updatedJob = await prisma.printJob.update({
-          where: { id: payload.jobId },
-          data: {
-            status: payload.status,
-            ...(payload.status === 'PRINTING' && !job.startedAt && { startedAt: new Date() }),
-            ...(payload.status === 'COMPLETED' && { completedAt: new Date() }),
-            ...(payload.status === 'FAILED' && {
-              completedAt: new Date(),
-              errorMessage: payload.errorMessage || 'Falha na execução do trabalho de impressão',
-            }),
-          },
-        });
+        const updatedJob = result.job;
 
         socketRegistry.broadcastToAdmins('dashboard:update', {
           type: 'print_job_status',
@@ -449,19 +414,24 @@ export function setupSocketServer(httpServer: HttpServer): Server {
           '',
         ].join('\n');
 
-        // Cria o registro oficial no banco PostgreSQL
-        const job = await prisma.printJob.create({
-          data: {
-            agentId: agent.id,
-            companyId: agent.companyId,
+        // Cria o registro oficial no banco PostgreSQL (empresa vigente lida sob lock)
+        const created = await createJobForAgent(agent.id, {
+          dispatch: false,
+          data: () => ({
             printerName: targetPrinter,
             title: `Teste Local (${agent.code})`,
             type: 'TEXT',
             content: textContent,
             options: { cut: true },
-            status: 'QUEUED',
-          },
+          }),
         });
+        if (!created) {
+          if (typeof ackCallback === 'function') {
+            ackCallback({ success: false, error: 'Agente não encontrado no Hub' });
+          }
+          return;
+        }
+        const job = created.job;
 
         // Notifica o painel administrativo em tempo real
         socketRegistry.broadcastToAdmins('dashboard:update', {

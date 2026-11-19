@@ -5,6 +5,7 @@ import { authAdmin } from '../../middlewares/auth';
 import { validate } from '../../middlewares/validate';
 import { socketRegistry } from '../../websocket/socket-registry';
 import { AuthenticatedAdminRequest } from '../../types';
+import { createJobForAgent } from '../../services/agent-jobs';
 
 const router = Router();
 router.use(authAdmin);
@@ -42,27 +43,15 @@ router.post('/', validate(printTestSchema), async (req: AuthenticatedAdminReques
       safeContent = Buffer.from(safeContent, 'binary').toString('base64');
     }
 
-    const job = await prisma.printJob.create({
-      data: {
-        agentId: agent.id,
-        companyId: agent.companyId,
-        printerName: resolvedPrinter,
-        type,
-        content: safeContent,
-        title,
-        options,
-        status: 'QUEUED',
-      },
+    const created = await createJobForAgent(agent.id, {
+      dispatch: true,
+      data: () => ({ printerName: resolvedPrinter, type, content: safeContent, title, options }),
     });
-
-    const isDispatched = socketRegistry.emitToAgent(agent.id, 'print:job', {
-      jobId: job.id,
-      title: job.title,
-      printerName: job.printerName,
-      type: job.type,
-      content: job.content,
-      options: job.options,
-    });
+    if (!created) {
+      res.status(404).json({ error: 'Agente não encontrado' });
+      return;
+    }
+    const { job, dispatched: isDispatched } = created;
 
     socketRegistry.broadcastToAdmins('dashboard:update', {
       type: 'new_print_job',

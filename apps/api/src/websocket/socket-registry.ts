@@ -33,6 +33,14 @@ class SocketRegistry {
     return null;
   }
 
+  /** agentId do socket somente se ele ainda for o socket ativo (não substituído) do agente. */
+  getActiveAgentId(socketId: string): string | null {
+    const agentId = this.socketIdToAgentId.get(socketId);
+    if (!agentId) return null;
+    const active = this.agentIdToSocket.get(agentId);
+    return active && active.id === socketId && active.connected ? agentId : null;
+  }
+
   getSocketByAgentId(agentId: string): Socket | undefined {
     return this.agentIdToSocket.get(agentId);
   }
